@@ -20,7 +20,7 @@ AKOSettings:
   clusterName: ali-tkg-cluster-01   # A unique identifier for the kubernetes cluster, that helps distinguish the objects for this cluster in the avi controller. // MUST-EDIT
   cniPlugin: 'antrea' # Set the string if your CNI is calico or openshift. enum: calico|canal|flannel|openshift|antrea|ncp
   enableEVH: false # This enables the Enhanced Virtual Hosting Model in Avi Controller for the Virtual Services
-  layer7Only: true # If this flag is switched on, then AKO will only do layer 7 loadbalancing.
+  layer7Only: false # If this flag is switched on, then AKO will only do layer 7 loadbalancing.
   # NamespaceSelector contains label key and value used for namespacemigration
   # Same label has to be present on namespace/s which needs migration/sync to AKO
   namespaceSelector:
@@ -36,17 +36,17 @@ AKOSettings:
   #   - kube-system
   #   - kube-public
   ipFamily: '' # This flag can take values V4 or V6 (default V4). This is for the backend pools to use ipv6 or ipv4. For frontside VS, use v6cidr
-
+  useDefaultSecretsOnly: 'false'
 
 ### This section outlines the network settings for virtualservices. 
 NetworkSettings:
   ## This list of network and cidrs are used in pool placement network for vcenter cloud.
   ## Node Network details are not needed when in nodeport mode / static routes are disabled / non vcenter clouds.
-  ## nodeNetworkList: []
+  #nodeNetworkList: []
   nodeNetworkList:
-  - networkName: "vnet-domain-c46043:8785e2f9-f088-4041-92fd-9c254835e188-namespace-01-al-d4394-0"
+  - networkName: "vnet-domain-c1009:705b2549-5261-411e-a857-67ae9a94f003-namespace-01-ali-a7382-0"
     cidrs:
-    -  10.244.0.32/28
+    - 10.244.0.32/28
   #       - 11.0.0.1/24
   enableRHI: false # This is a cluster wide setting for BGP peering.
   nsxtT1LR: '' # T1 Logical Segment mapping for backend network. Only applies to NSX-T cloud.
@@ -64,7 +64,7 @@ NetworkSettings:
 L7Settings:
   defaultIngController: 'true'
   noPGForSNI: false # Switching this knob to true, will get rid of poolgroups from SNI VSes. Do not use this flag, if you don't want http caching. This will be deprecated once the controller support caching on PGs.
-  serviceType: NodePortLocal # enum NodePort|ClusterIP|NodePortLocal
+  serviceType: ClusterIP # enum NodePort|ClusterIP|NodePortLocal
   shardVSSize: LARGE   # Use this to control the layer 7 VS numbers. This applies to both secure/insecure VSes but does not apply for passthrough. ENUMs: LARGE, MEDIUM, SMALL, DEDICATED
   passthroughShardSize: SMALL   # Control the passthrough virtualservice numbers using this ENUM. ENUMs: LARGE, MEDIUM, SMALL
   enableMCI: 'false' # Enabling this flag would tell AKO to start processing multi-cluster ingress objects.
